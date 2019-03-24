@@ -13,3 +13,7 @@ Paper covers fusion of color images set. Each is taken from same camera spot, bu
 ## Dependencies
 
 Paper is implemented in Python 3 with use of NumPy nad OpenCV (only for RGB <-> YUV conversion).
+
+## Licence
+
+[MIT](https://github.com/ToKraTheSecond/Implementation-of-MLIC-fusion/blob/master/LICENSE)
