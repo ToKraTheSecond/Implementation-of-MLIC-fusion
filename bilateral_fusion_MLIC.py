@@ -2,7 +2,8 @@ import cv2
 import numpy as np
 
 class Bilateral_fusion_MLIC:
-    def __init__(self, kernel_size, scale_depth, alfa, beta):
+    def __init__(self, image_set, kernel_size, scale_depth, alfa, beta):
+        self.image_set = image_set
         self.kernel_size = kernel_size
         self.scale_depth = scale_depth
         self.alfa = alfa
@@ -27,10 +28,11 @@ class Bilateral_fusion_MLIC:
         # min max diff?
         pass
 
-    def apply_decomposition_step(self, image, sigma_range, sigma_spatial):
+    def apply_decomposition_step(self, image):
 
         rows_count, columns_count = image.shape
 
+        # so we do not need to manually iterate over kernel area
         xx, yy = np.meshgrid(range(-self.kernel_size, self.kernel_size + 1), 
                              range(-self.kernel_size, self.kernel_size + 1))
 
@@ -51,6 +53,21 @@ class Bilateral_fusion_MLIC:
                 # do decomposition step
         
         pass
+    
+    def apply_decomposition(self, image):
+        """This must be done for every image in input image set."""
+        decomposed_images = []
+        decomposed_images.append(image)
+        
+        # TODO: Move it to list comprehension
+        for scale_step in range(1, self.scale_depth + 1):
+            # TODO: Only first try, should be further evaluated
+            spatial_gaussian = 2 ** (scale_step - 1)
+            range_gaussian = 0.1 / (2 ** (scale_stel - 1))
+            
+            decomposed_images.append(apply_decomposition_step(self, image))
+
+        return decomposed_images
 
     def get_gaussian_value(x, sigma):
         gaussian_value = np.exp(-(x**2)/(sigma**2))
