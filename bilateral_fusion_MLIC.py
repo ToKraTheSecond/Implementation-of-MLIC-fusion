@@ -28,7 +28,7 @@ class Bilateral_fusion_MLIC:
         # min max diff?
         pass
 
-    def apply_decomposition_step(self, image):
+    def apply_decomposition_step(self, image, spatial_gaussian, range_gaussian):
 
         rows_count, columns_count = image.shape
 
@@ -36,7 +36,7 @@ class Bilateral_fusion_MLIC:
         xx, yy = np.meshgrid(range(-self.kernel_size, self.kernel_size + 1), 
                              range(-self.kernel_size, self.kernel_size + 1))
 
-        spatial_response = np.exp(-(xx**2 + yy**2)/(sigma**2))
+        spatial_response = np.exp( - (xx ** 2 + yy ** 2) / (spatial_gaussian ** 2))
 
         for row in rows:
             for column in columns:
@@ -47,7 +47,7 @@ class Bilateral_fusion_MLIC:
                 column_max = min(column + self.kernel_size, columns_count)
                 roi = image[row_min:row_max + 1, column_min, column_max + 1]
 
-                range_response = np.exp(-((roi - image[row, column])**2 / (sigma**2))
+                range_response = np.exp(-((roi - image[row, column]) ** 2 / (range_gaussian ** 2))
                 responses_product = spatial_response * range_response
 
                 # do decomposition step
@@ -65,12 +65,12 @@ class Bilateral_fusion_MLIC:
             spatial_gaussian = 2 ** (scale_step - 1)
             range_gaussian = 0.1 / (2 ** (scale_stel - 1))
             
-            decomposed_images.append(apply_decomposition_step(self, image))
+            decomposed_images.append(apply_decomposition_step(self, image, spatial_gaussian, range_gaussian))
 
         return decomposed_images
 
     def get_gaussian_value(x, sigma):
-        gaussian_value = np.exp(-(x**2)/(sigma**2))
+        gaussian_value = np.exp( - ( x ** 2) / (sigma ** 2))
 
         return gaussian_value
 
