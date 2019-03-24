@@ -23,16 +23,18 @@ class Bilateral_fusion_MLIC:
         return log_y_channel_set
 
     def get_intensity_range(y_channel):
+        """Needed for setting range gaussian value."""
         # TODO:
         # Research how to do this
         # min max diff?
+
         pass
 
     def apply_decomposition_step(self, image, spatial_gaussian, range_gaussian):
-
         rows_count, columns_count = image.shape
+        output_image = np.zeros((rows_count, columns_count))
 
-        # so we do not need to manually iterate over kernel area
+        # so we do not need to manually iterate over each pixel in kernel area
         xx, yy = np.meshgrid(range(-self.kernel_size, self.kernel_size + 1), 
                              range(-self.kernel_size, self.kernel_size + 1))
 
@@ -48,11 +50,10 @@ class Bilateral_fusion_MLIC:
                 roi = image[row_min:row_max + 1, column_min, column_max + 1]
 
                 range_response = np.exp(-((roi - image[row, column]) ** 2 / (range_gaussian ** 2))
-                responses_product = spatial_response * range_response
 
-                # do decomposition step
-        
-        pass
+                output_image[row, column] = (1 / np.sum(responses_product)) * (spatial_response * range_response * roi)
+       
+        return output_image
     
     def apply_decomposition(self, image):
         """This must be done for every image in input image set."""
