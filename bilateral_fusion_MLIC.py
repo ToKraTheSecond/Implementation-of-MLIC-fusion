@@ -68,10 +68,3 @@ class Bilateral_fusion_MLIC:
             decomposed_images.append(apply_decomposition_step(self, image, spatial_gaussian, range_gaussian))
 
         return decomposed_images
-
-    def get_gaussian_value(x, sigma):
-        gaussian_value = np.exp( - ( x ** 2) / (sigma ** 2))
-
-        return gaussian_value
-
-    def get_point_distance()
