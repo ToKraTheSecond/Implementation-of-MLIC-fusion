@@ -49,7 +49,7 @@ class Bilateral_fusion_MLIC:
                 column_max = min(column + self.kernel_size, columns_count)
                 roi = image[row_min:row_max + 1, column_min, column_max + 1]
 
-                range_response = np.exp(-((roi - image[row, column]) ** 2 / (range_gaussian ** 2))
+                range_response = np.exp(-1 * ((roi - image[row, column]) ** 2 / (range_gaussian ** 2)))
 
                 output_image[row, column] = (1 / np.sum(responses_product)) * (spatial_response * range_response * roi)
        
