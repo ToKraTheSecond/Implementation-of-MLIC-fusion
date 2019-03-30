@@ -12,7 +12,11 @@ Paper covers fusion of color images set. Each is taken from same camera spot, bu
 
 ## Dependencies
 
-Paper is implemented in Python 3 with use of NumPy and OpenCV (only for RGB <-> YUV conversion).
+Paper is implemented in Python 3 with use of:
+*  NumPy
+*  OpenCV (only for RGB <-> YUV conversion)
+*  Pytest
+*  Jupyter Notebook (only for evaluation)
 
 ## StackExchange questions about paper / implementation
 * [I couldn't understand the meaning of eq. 11 on page 5](https://dsp.stackexchange.com/questions/26069/multiscale-shape-and-detail-enhancement-from-multi-light-image-collections)
