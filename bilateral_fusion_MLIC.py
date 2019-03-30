@@ -60,12 +60,12 @@ class Bilateral_fusion_MLIC:
         decomposed_images = []
         decomposed_images.append(image)
         
-        # TODO: Move it to list comprehension
-        for scale_step in range(1, self.scale_depth + 1):
-            # TODO: Only first try, should be further evaluated
-            spatial_gaussian = 2 ** (scale_step - 1)
-            range_gaussian = 0.1 / (2 ** (scale_stel - 1))
+        if self.scale_depth > 1:
+            for scale_step in range(1, self.scale_depth + 1):
+                # TODO: Only first try, should be further evaluated
+                spatial_gaussian = 2 ** (scale_step - 1)
+                range_gaussian = 0.1 / (2 ** (scale_step - 1))
             
-            decomposed_images.append(apply_decomposition_step(self, image, spatial_gaussian, range_gaussian))
+                decomposed_images.append(apply_decomposition_step(self, image, spatial_gaussian, range_gaussian))
 
         return decomposed_images
