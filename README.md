@@ -14,7 +14,7 @@ Paper covers fusion of color images set. Each is taken from same camera spot, bu
 
 Paper is implemented in Python 3 with use of:
 *  NumPy
-*  OpenCV (only for RGB <-> YUV conversion)
+*  OpenCV (RGB <-> YUV conversion, tests and evaluation notebook)
 *  Pytest
 *  Jupyter Notebook (only for evaluation)
 
