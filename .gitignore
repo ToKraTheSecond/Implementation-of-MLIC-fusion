@@ -3,6 +3,7 @@
 
 # Python files
 __pycache__/
+.pytest_cache/
 
 # Visual Code files
 .vscode/
