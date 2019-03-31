@@ -2,24 +2,26 @@ import cv2
 import numpy as np
 
 class Bilateral_fusion_MLIC:
-    def __init__(self, image_set, kernel_size, scale_depth, alfa, beta):
+    def __init__(self, image_set, kernel_size, scale_depth, alpha, beta):
         self.image_set = image_set
         self.kernel_size = kernel_size
         self.scale_depth = scale_depth
-        self.alfa = alfa
+        self.alpha = alpha
         self.beta = beta
+        self.converted_image_set = []
 
     def convert_color_space(self, target_space):
         if target_space == 'RGB2YUV':
-            converted_image_set = [cv2.cvtColor(image, cv2.COLOR_RGB2YUV) for image in self.image_set]
+            self.converted_image_set = [cv2.cvtColor(image, cv2.COLOR_RGB2YUV) for image in self.image_set]
         elif target_space == 'YUV2RGB':
-            converted_image_set = [cv2.cvtColor(image, cv2.COLOR_YUV2RGB) for image in self.image_set]
+            self.converted_image_set = [cv2.cvtColor(image, cv2.COLOR_YUV2RGB) for image in self.image_set]
 
         return converted_image_set
   
-    def get_log_y_channel_set(y_channel_set):
-        log_y_channel_set = [np.log(y_channel) for y_channel in y_channel_set]
-        
+    def log_y_channels(self):
+        #Y channel has index 0 - [Y, U, V]
+        log_y_channel_set = [np.log(image[:,:,0]) for image in self.image_set]
+            
         return log_y_channel_set
 
     def get_intensity_range(y_channel):
@@ -69,3 +71,7 @@ class Bilateral_fusion_MLIC:
                 decomposed_images.append(apply_decomposition_step(self, image, spatial_gaussian, range_gaussian))
 
         return decomposed_images
+
+    def fuse(self):
+        convert_color_space('RGB2YUV')
+        log_y_channels()
