@@ -71,7 +71,7 @@ class Bilateral_fusion_MLIC:
         decomposed_images.append(image)
         
         if self.scale_depth > 1:
-            for scale_step in range(1, self.scale_depth + 1):
+            for scale_step in range(1, self.scale_depth):
                 # TODO: Only first try, should be further evaluated
                 self.spatial_gaussian = 2 ** (scale_step - 1)
                 self.range_gaussian = 0.1 / (2 ** (scale_step - 1))
