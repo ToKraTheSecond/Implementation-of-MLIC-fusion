@@ -52,7 +52,7 @@ class Bilateral_fusion_MLIC:
                 column_max = min(column + self.kernel_size, columns_count - 1)
                 roi = image[row_min:row_max + 1, column_min:column_max + 1]
 
-                # spatial_response offsets -> only correct spatial_response region will be indexed
+                # spatial_response offsets -> only correct spatial_response region will be indexed when indexed pixel is near image border
                 r_o = -1 * row + self.kernel_size
                 c_o = -1 * column + self.kernel_size
                 spatial_response_off = spatial_response[row_min + r_o:row_max + r_o + 1,
@@ -60,8 +60,6 @@ class Bilateral_fusion_MLIC:
 
                 range_response = np.exp(-1 * ((roi - image[row, column]) ** 2 / (self.range_gaussian ** 2)))                
                 responses_product = spatial_response_off * range_response
-
-
 
                 output_image[row, column] = (1 / np.sum(responses_product)) * np.sum((responses_product * roi))
        
