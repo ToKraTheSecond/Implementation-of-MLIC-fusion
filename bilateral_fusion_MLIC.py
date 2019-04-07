@@ -18,12 +18,10 @@ class Bilateral_fusion_MLIC:
             self.converted_image_set = [cv2.cvtColor(image, cv2.COLOR_RGB2YUV) for image in self.image_set]
         elif target_space == 'YUV2RGB':
             self.converted_image_set = [cv2.cvtColor(image, cv2.COLOR_YUV2RGB) for image in self.image_set]
-
-        return self.converted_image_set
   
     def log_y_channels(self):
         #Y channel has index 0 - [Y, U, V]
-        log_y_channel_set = [np.log(image[:,:,0]) for image in self.image_set]
+        log_y_channel_set = [np.log(image[:,:,0]) for image in self.converted_image_set]
             
         return log_y_channel_set
 
