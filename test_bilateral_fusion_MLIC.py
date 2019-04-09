@@ -14,17 +14,21 @@ def test_fuse_method_works_with_ok_input():
     MLIC_fusion = Bilateral_fusion_MLIC(image_set=test_image_set, kernel_size=3, scale_depth=2, alpha=None, beta=None)
     MLIC_fusion.fuse()
 
-def test_decomposed_set_contains_correct_number_of_image():
+@pytest.mark.parametrize('scale_depth, expected', [
+    (1, 1),
+    (2, 2),
+    (3, 3)
+])
+def test_decomposed_set_contains_correct_number_of_image(scale_depth, expected):
     test_image = load_test_image()
     test_image_set = [test_image]
 
-    MLIC_fusion = Bilateral_fusion_MLIC(image_set=test_image_set, kernel_size=3, scale_depth=2, alpha=None, beta=None)
+    MLIC_fusion = Bilateral_fusion_MLIC(image_set=test_image_set, kernel_size=3, scale_depth=scale_depth, alpha=None, beta=None)
     MLIC_fusion.fuse()
     
     obtained = len(MLIC_fusion.decomposed_set[0])
-    expected = 2
     
-    assert  obtained == 2
+    assert  obtained == expected
 
 def test_first_image_in_decomposed_set_is_unchanged():
     test_image = load_test_image()
