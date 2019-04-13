@@ -3,7 +3,8 @@
 # Implementation-of-MLIC-fusion paper
 Multiscale Shape and Detail Enhancement from Multi-light Image Collections; Fattal, Agrawal, Rusinkiewicz
 
-Paper covers fusion of color images set. Each is taken from same camera spot, but with different lightning directions. It is possible to affect output enhancement via two parameters - *alpha* nad *beta* -> perception of depth vs visible detail in the shadow regions
+Synthesis algorithm is designed to enhance shape and surface detail by combining shading information across all of the input MLIC images.
+Each is taken from same camera spot, but with different lightning directions.
 
 ## Paper link
 * [princeton.edu](https://gfx.cs.princeton.edu/pubs/Fattal_2007_MSA/mlic.pdf)
