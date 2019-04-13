@@ -7,6 +7,7 @@ Synthesis algorithm is designed to enhance shape and surface detail by combining
 Each is taken from same camera spot, but with different lightning directions.
 
 ## Paper link
+* [The Hebrew University of Jerusalem](http://www.cs.huji.ac.il/~raananf/projects/mlic/mlic.html) ?original source? contains link to image test data
 * [princeton.edu](https://gfx.cs.princeton.edu/pubs/Fattal_2007_MSA/mlic.pdf)
 * [berkeley.edu](http://kneecap.cs.berkeley.edu/papers/mlic/mlic-SIG07.pdf)
 
