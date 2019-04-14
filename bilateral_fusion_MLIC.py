@@ -80,6 +80,18 @@ class Bilateral_fusion_MLIC:
 
         return decomposed_images
 
+    @staticmethod
+    def get_gradient_magnitude(image):
+        dx = cv2.Sobel(image, cv2.CV_32F, 1, 0)
+        dy = cv2.Sobel(image, cv2.CV_32F, 0, 1)
+        
+        dx_abs = cv2.convertScaleAbs(dx)
+        dy_abs = cv2.convertScaleAbs(dy)
+
+        magnitude = cv2.addWeighted(dx_abs, 0.5, dy_abs, 0.5, 0)
+
+        return magnitude
+
     def fuse(self):
         self.convert_color_space('RGB2YUV')
         self.log_y_channel_set = self.log_y_channels()
