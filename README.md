@@ -36,7 +36,7 @@ Fusion algorithm is implemented in single python class. Fusion class is located 
 from bilateral_fusion_MLIC import Bilateral_fusion_MLIC
 ```
 
-Fusion is usable via:
+Instantiate and call fuse method:
 
 ```
 mlic_fusion = Bilateral_fusion_MLIC(image_set=None, kernel_size=None, scale_depth=None, alpha=None, beta=None)
