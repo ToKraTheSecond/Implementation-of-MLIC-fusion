@@ -43,7 +43,7 @@ mlic_fusion = Bilateral_fusion_MLIC(image_set=None, kernel_size=None, scale_dept
 fused_image = mlic_fusion.fuse()
 ```
 
-* *image_set*: list MLIC images each as numpy array
+* *image_set*: list of MLIC images each as numpy array
 * *kernel_size*: bilateral decomposition step kernel size
 * *scale_depth*: bilateral decomposition depth
 * *alpha*: weight used during construction of I_base
