@@ -12,6 +12,7 @@ class Bilateral_fusion_MLIC:
         self.decomposed_set = []
         self.range_gaussian = 0
         self.spatial_gaussian = 0
+        self.epsilon = 0.001
 
     def convert_color_space(self, target_space):
         if target_space == 'RGB2YUV':
