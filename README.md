@@ -18,11 +18,13 @@ Each author is from different university.
 Paper is implemented in Python 3.X with use of:
 *  NumPy
 *  OpenCV 3.X:
-    * cv2.cvtColor() - RGB <-> YUV
-    * cv2.Sobel() - to get gradient magnitude
-    * cv2.convertScaleAbs() - to get gradient magnitude
-    * cv2.addWeighted() - to get gradient magnitude
-    * cv2.imread() - in tests
+    * cv2.cvtColor - RGB <-> YUV
+    * cv2.Sobel - to get gradient magnitude
+    * cv2.convertScaleAbs - to get gradient magnitude
+    * cv2.addWeighted - to get gradient magnitude
+    * cv2.imread - in tests
+* SciPy:
+    * scipy.ndimage.filters.minimum_filter - during construction of I Detail
 *  Pytest
 *  Jupyter Notebook (only for evaluation)
 
