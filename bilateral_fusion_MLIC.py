@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import scipy.ndimage
 
 from collections import namedtuple
 
@@ -14,6 +15,7 @@ class Bilateral_fusion_MLIC:
         self.decomposed_set = []
         self.difference_set = []
         self.i_detail_d_set = []
+        self.i_detail_c_set = []
         self.range_gaussian = 0
         self.spatial_gaussian = 0
         self.epsilon = 0.001
@@ -95,8 +97,7 @@ class Bilateral_fusion_MLIC:
             
             # evenly divide into 3 ranges, each raised with different lambda exponent
             d_2 = abs(image)
-            d_2_min = d_2.min()
-            d_2_max = d_2.max()            
+            d_2_min, d_2_max = d_2.min(), d_2.max()             
             limit_1 = d_2_min + (d_2_max - d_2_min) / 3
             limit_2 = d_2_min + 2 * ((d_2_max - d_2_min) / 3)            
             d_2 = np.where(d_2 < limit_1, abs(d_2) ** self.i_detail_lambda.low, d_2)
@@ -104,10 +105,15 @@ class Bilateral_fusion_MLIC:
             d_2 = np.where(limit_2 < d_2, abs(d_2) ** self.i_detail_lambda.high, d_2)
 
             self.i_detail_d_set.append(d_1 * d_2)
+        
+        for image in self.decomposed_set[1:]:
+            gradient_magnitude = self.get_gradient_magnitude(image)
+            image_neighbourhood_min = scipy.ndimage.filters.minimum_filter(image, 3)
+            image_neighbourhood_min_with_no_zeros = image_neighbourhood_min + self.epsilon
 
+            self.i_detail_c_set.append(gradient_magnitude / image_neighbourhood_min_with_no_zeros)
 
-    @staticmethod
-    def get_gradient_magnitude(image):
+    def get_gradient_magnitude(self, image):
         dx = cv2.Sobel(image, cv2.CV_32F, 1, 0)
         dy = cv2.Sobel(image, cv2.CV_32F, 0, 1)
         
