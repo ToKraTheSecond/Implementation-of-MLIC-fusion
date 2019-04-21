@@ -92,6 +92,7 @@ class Bilateral_fusion_MLIC:
     def construct_I_detail(self):
         self.difference_set = [i_moved - i for i_moved, i in zip(self.decomposed_set[1:], self.decomposed_set)]
 
+        # construct i_detail_d_set <give me my own method pls ;(>
         for image in self.difference_set:
             d_1 = np.sign(image)
             
@@ -106,8 +107,11 @@ class Bilateral_fusion_MLIC:
 
             self.i_detail_d_set.append(d_1 * d_2)
         
+        # construct i_detail_c_set <give me my own method pls ;(>
         for image in self.decomposed_set[1:]:
             gradient_magnitude = self.get_gradient_magnitude(image)
+            # TODO: Do we need this dependency?
+            # TODO: Check optional params
             image_neighbourhood_min = scipy.ndimage.filters.minimum_filter(image, 3)
             image_neighbourhood_min_with_no_zeros = image_neighbourhood_min + self.epsilon
 
