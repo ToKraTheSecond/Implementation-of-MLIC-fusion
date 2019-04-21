@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 
+from collections import namedtuple
+
 class Bilateral_fusion_MLIC:
     def __init__(self, image_set, kernel_size, scale_depth, alpha, beta):
         self.image_set = image_set
@@ -10,9 +12,13 @@ class Bilateral_fusion_MLIC:
         self.beta = beta
         self.converted_image_set = []
         self.decomposed_set = []
+        self.difference_set = []
+        self.i_detail_d_set = []
         self.range_gaussian = 0
         self.spatial_gaussian = 0
         self.epsilon = 0.001
+        I_detail_lambda = namedtuple('I_detail_lambda', 'low mid high')
+        self.i_detail_lambda = I_detail_lambda(0.95, 0.8, 0.75)
 
     def convert_color_space(self, target_space):
         if target_space == 'RGB2YUV':
@@ -80,6 +86,25 @@ class Bilateral_fusion_MLIC:
                 decomposed_images.append(self.apply_decomposition_step(image))
 
         return decomposed_images
+    
+    def construct_I_detail(self):
+        self.difference_set = [i_moved - i for i_moved, i in zip(self.decomposed_set[1:], self.decomposed_set)]
+
+        for image in self.difference_set:
+            d_1 = np.sign(image)
+            
+            # evenly divide into 3 ranges, each raised with different lambda exponent
+            d_2 = abs(image)
+            d_2_min = d_2.min()
+            d_2_max = d_2.max()            
+            limit_1 = d_2_min + (d_2_max - d_2_min) / 3
+            limit_2 = d_2_min + 2 * ((d_2_max - d_2_min) / 3)            
+            d_2 = np.where(d_2 < limit_1, abs(d_2) ** self.i_detail_lambda.low, d_2)
+            d_2 = np.where(limit_1 < d_2 <= limit_2, abs(d_2) ** self.i_detail_lambda.mid, d_2)
+            d_2 = np.where(limit_2 < d_2, abs(d_2) ** self.i_detail_lambda.high, d_2)
+
+            self.i_detail_d_set.append(d_1 * d_2)
+
 
     @staticmethod
     def get_gradient_magnitude(image):
