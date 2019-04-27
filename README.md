@@ -23,6 +23,7 @@ Paper is implemented in Python 3.X with use of:
     * cv2.convertScaleAbs - to get gradient magnitude
     * cv2.addWeighted - to get gradient magnitude
     * cv2.imread - in tests
+    * cv2.GaussianBlur - during construction of I Detail
 * SciPy:
     * scipy.ndimage.filters.minimum_filter - during construction of I Detail
 *  Pytest
