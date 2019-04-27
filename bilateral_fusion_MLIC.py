@@ -14,8 +14,10 @@ class Bilateral_fusion_MLIC:
         self.converted_image_set = []
         self.decomposed_set = []
         self.difference_set = []
+        self.i_detail_set = []
         self.i_detail_d_set = []
         self.i_detail_c_set = []
+        self.i_detail_u_set = []
         self.range_gaussian = 0
         self.spatial_gaussian = 0
         self.epsilon = 0.001
@@ -92,6 +94,7 @@ class Bilateral_fusion_MLIC:
     def construct_I_detail(self):
         self.difference_set = [i_moved - i for i_moved, i in zip(self.decomposed_set[1:], self.decomposed_set)]
 
+        # TODO: cana we do this in parallel without so many for loops?
         # construct i_detail_d_set <give me my own method pls ;(>
         for image in self.difference_set:
             d_1 = np.sign(image)
@@ -116,6 +119,22 @@ class Bilateral_fusion_MLIC:
             image_neighbourhood_min_with_no_zeros = image_neighbourhood_min + self.epsilon
 
             self.i_detail_c_set.append(gradient_magnitude / image_neighbourhood_min_with_no_zeros)
+
+        # construct i_detail_u_set <give me my own method pls ;(>
+        for d_array, c_array in zip(self.i_detail_d_set, self.i_detail_c_set):
+            d_array_abs = np.absolute(d_array)
+            # TODO: Global parameters?
+            sigma = 8
+            kernel_size = 3
+            u_array = cv2.GaussianBlur((d_array_abs - c_array), kernel_size, sigma)
+
+            self.i_detail_u_set.append(u_array)
+
+        # construct i_detail_set <gie me my own method pls ;(>
+        for u_array, d_array in zip(self.i_detail_u_set, self.i_detail_d_set):
+            i_detail = (u_array * d_array) / u_array
+
+            self.i_detail_set.append(i_detail)        
 
     def get_gradient_magnitude(self, image):
         dx = cv2.Sobel(image, cv2.CV_32F, 1, 0)
