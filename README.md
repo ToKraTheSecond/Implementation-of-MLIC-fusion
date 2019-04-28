@@ -54,6 +54,7 @@ fused_image = mlic_fusion.fuse()
 
 ## StackExchange questions about paper / implementation
 * [I couldn't understand the meaning of eq. 11 on page 5](https://dsp.stackexchange.com/questions/26069/multiscale-shape-and-detail-enhancement-from-multi-light-image-collections)
+* [Multi-light Image Collections fusion - not defined parameter](https://dsp.stackexchange.com/questions/57982/multi-light-image-collections-fusion-not-defined-parameter?noredirect=1#comment115395_57982)
 
 ## Licence
 
