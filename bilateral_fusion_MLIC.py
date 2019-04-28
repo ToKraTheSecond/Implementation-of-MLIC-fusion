@@ -11,18 +11,19 @@ class Bilateral_fusion_MLIC:
         self.scale_depth = scale_depth
         self.alpha = alpha
         self.beta = beta
+        self.epsilon = 0.001
+        self.eta = 1.0
+        I_detail_lambda = namedtuple('I_detail_lambda', 'low mid high')
+        self.i_detail_lambda = I_detail_lambda(0.95, 0.8, 0.75)
         self.converted_image_set = []
-        self.decomposed_set = []
         self.difference_set = []
+        self.i_base_set = []
         self.i_detail_set = []
         self.i_detail_d_set = []
         self.i_detail_c_set = []
         self.i_detail_u_set = []
         self.range_gaussian = 0
         self.spatial_gaussian = 0
-        self.epsilon = 0.001
-        I_detail_lambda = namedtuple('I_detail_lambda', 'low mid high')
-        self.i_detail_lambda = I_detail_lambda(0.95, 0.8, 0.75)
 
     def convert_color_space(self, target_space):
         if target_space == 'RGB2YUV':
@@ -91,8 +92,8 @@ class Bilateral_fusion_MLIC:
 
         return decomposed_images
     
-    def construct_I_detail(self):
-        self.difference_set = [i_moved - i for i_moved, i in zip(self.decomposed_set[1:], self.decomposed_set)]
+    def construct_I_detail_set(self):
+        self.difference_set = [i_moved - i for i_moved, i in zip(self.i_base_set[1:], self.i_base_set)]
 
         # TODO: cana we do this in parallel without so many for loops?
         # construct i_detail_d_set <give me my own method pls ;(>
@@ -111,7 +112,7 @@ class Bilateral_fusion_MLIC:
             self.i_detail_d_set.append(d_1 * d_2)
         
         # construct i_detail_c_set <give me my own method pls ;(>
-        for image in self.decomposed_set[1:]:
+        for image in self.i_base_set[1:]:
             gradient_magnitude = self.get_gradient_magnitude(image)
             # TODO: Do we need this dependency?
             # TODO: Check optional params
@@ -134,7 +135,11 @@ class Bilateral_fusion_MLIC:
         for u_array, d_array in zip(self.i_detail_u_set, self.i_detail_d_set):
             i_detail = (u_array * d_array) / u_array
 
-            self.i_detail_set.append(i_detail)        
+            self.i_detail_set.append(i_detail)
+
+    # def construct_I_base_set_user_combined(self):
+
+    # def construct_I_base_set_robust_maximum(self):       
 
     def get_gradient_magnitude(self, image):
         dx = cv2.Sobel(image, cv2.CV_32F, 1, 0)
@@ -150,6 +155,6 @@ class Bilateral_fusion_MLIC:
     def fuse(self):
         self.convert_color_space('RGB2YUV')
         self.log_y_channel_set = self.log_y_channels()
-        self.decomposed_set = [self.apply_decomposition(image) for image in self.log_y_channel_set]
+        self.i_base_set = [self.apply_decomposition(image) for image in self.log_y_channel_set]
 
-        return self.decomposed_set
+        return self.i_base_set
