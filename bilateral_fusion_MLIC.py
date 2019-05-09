@@ -18,7 +18,6 @@ class Bilateral_fusion_MLIC:
         self.converted_image_set = []
         self.decomposed_image_set = []
         self.difference_set = []
-        self.i_base_set = []
         self.i_detail_set = []
         self.i_detail_d_set = []
         self.i_detail_c_set = []
@@ -134,6 +133,12 @@ class Bilateral_fusion_MLIC:
             i_detail = (u_array * d_array) / u_array
 
             self.i_detail_set.append(i_detail)
+
+    def construct_i_base_robust_maximum(self):
+        stacked_set = np.stack(self.decomposed_image_set, axis=0)
+        i_base = np.apply_along_axis(func1d=self.robust_maximum, axis=0, arr=stacked_set)
+
+        return i_base
    
     def get_gradient_magnitude(self, image):
         dx = cv2.Sobel(image, cv2.CV_32F, 1, 0)
