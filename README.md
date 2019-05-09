@@ -46,11 +46,12 @@ mlic_fusion = Bilateral_fusion_MLIC(image_set=None, kernel_size=None, scale_dept
 fused_image = mlic_fusion.fuse()
 ```
 
-* *image_set*: list of MLIC images each as numpy array
+* *image_set*: list of 8bit RGB MLIC images each as numpy array [row, column, channel]
 * *kernel_size*: bilateral decomposition step kernel size
 * *scale_depth*: bilateral decomposition depth
 * *alpha*: weight used during construction of I_base
 * *beta*: used to trade-off emphasis of the detail image versus the base images (during construction of I_detail)
+* *fused_image*: one 8bit RGB image as numpy array [row, column, channel]
 
 ## StackExchange questions about paper / implementation
 * [I couldn't understand the meaning of eq. 11 on page 5](https://dsp.stackexchange.com/questions/26069/multiscale-shape-and-detail-enhancement-from-multi-light-image-collections)
