@@ -1,5 +1,6 @@
 # Jupyter notebook files
 .ipynb_checkpoints/
+*.tex
 
 # Python files
 __pycache__/
@@ -7,3 +8,9 @@ __pycache__/
 
 # Visual Code files
 .vscode/
+
+# Unwanted folders
+dataset/
+
+# Unwanted files
+*.png
