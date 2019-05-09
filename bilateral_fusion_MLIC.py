@@ -137,10 +137,6 @@ class Bilateral_fusion_MLIC:
 
             self.i_detail_set.append(i_detail)
 
-    # def construct_I_base_set_user_combined(self):
-
-    # def construct_I_base_set_robust_maximum(self):       
-
     def get_gradient_magnitude(self, image):
         dx = cv2.Sobel(image, cv2.CV_32F, 1, 0)
         dy = cv2.Sobel(image, cv2.CV_32F, 0, 1)
@@ -151,6 +147,15 @@ class Bilateral_fusion_MLIC:
         magnitude = cv2.addWeighted(dx_abs, 0.5, dy_abs, 0.5, 0)
 
         return magnitude
+
+    def robust_maximum(self, array_1d):    
+        indexes = np.argpartition(array_1d, -2)[-2:]
+        b2, b1 = np.sort(np.array([array_1d[indexes[0]], array_1d[indexes[1]]]))
+        weight = 1
+        r = weight * (b1 / b2)
+        robust_maximum = ( b1 + b2 * r) / (1 + r)
+        
+        return robust_maximum
 
     def fuse(self):
         self.convert_color_space('RGB2YUV')
