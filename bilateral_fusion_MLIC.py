@@ -102,7 +102,7 @@ class Bilateral_fusion_MLIC:
             limit_1 = d_2_min + (d_2_max - d_2_min) / 3
             limit_2 = d_2_min + 2 * ((d_2_max - d_2_min) / 3)            
             d_2 = np.where(d_2 < limit_1, abs(d_2) ** self.i_detail_lambda.low, d_2)
-            d_2 = np.where(limit_1 < d_2 <= limit_2, abs(d_2) ** self.i_detail_lambda.mid, d_2)
+            d_2 = np.where(np.logical_and(limit_1 < d_2, d_2 <= limit_2), abs(d_2) ** self.i_detail_lambda.mid, d_2)
             d_2 = np.where(limit_2 < d_2, abs(d_2) ** self.i_detail_lambda.high, d_2)
 
             self.i_detail_d_set.append(d_1 * d_2)
@@ -123,7 +123,7 @@ class Bilateral_fusion_MLIC:
             # TODO: Global parameters?
             sigma = 8
             kernel_size = 3
-            u_array = cv2.GaussianBlur((d_array_abs - c_array), kernel_size, sigma)
+            u_array = cv2.GaussianBlur(d_array_abs - c_array, kernel_size, sigma)
 
             self.i_detail_u_set.append(u_array)
 
@@ -142,8 +142,8 @@ class Bilateral_fusion_MLIC:
         return i_base
    
     def get_gradient_magnitude(self, image):
-        dx = cv2.Sobel(image, cv2.CV_32F, 1, 0)
-        dy = cv2.Sobel(image, cv2.CV_32F, 0, 1)
+        dx = cv2.Sobel(image.astype(np.float32), cv2.CV_32F, 1, 0)
+        dy = cv2.Sobel(image.astype(np.float32), cv2.CV_32F, 0, 1)
         
         dx_abs = cv2.convertScaleAbs(dx)
         dy_abs = cv2.convertScaleAbs(dy)
@@ -162,6 +162,9 @@ class Bilateral_fusion_MLIC:
         return robust_maximum
 
     def fuse(self):
+        # TODO: Add consistency check
+        if self.scale_depth == 1:
+            return self.image_set[0]   
         # converted set is filled implicitly
         self.convert_color_space('RGB2YUV')
         # log_y set is filled implicitly
