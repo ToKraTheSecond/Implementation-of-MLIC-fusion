@@ -121,9 +121,7 @@ class Bilateral_fusion_MLIC:
         for d_array, c_array in zip(self.i_detail_d_set, self.i_detail_c_set):
             d_array_abs = np.absolute(d_array)
             # TODO: Global parameters?
-            sigma = 8
-            kernel_size = 3
-            u_array = cv2.GaussianBlur(d_array_abs - c_array, kernel_size, sigma)
+            u_array = cv2.GaussianBlur(d_array_abs - c_array, ksize=(3, 3), sigmaX=8)
 
             self.i_detail_u_set.append(u_array)
 
