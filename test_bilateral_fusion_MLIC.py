@@ -34,7 +34,7 @@ def test_first_image_in_decomposed_image_set_is_unchanged():
     test_image = load_test_image()
     test_image_set = [test_image]
 
-    MLIC_fusion = Bilateral_fusion_MLIC(image_set=test_image_set, kernel_size=3, scale_depth=1, alpha=None, beta=0.8)
+    MLIC_fusion = Bilateral_fusion_MLIC(image_set=test_image_set, kernel_size=3, scale_depth=2, alpha=None, beta=0.8)
     result_image = MLIC_fusion.fuse()
 
     expected = MLIC_fusion.log_y_channel_set[0]
