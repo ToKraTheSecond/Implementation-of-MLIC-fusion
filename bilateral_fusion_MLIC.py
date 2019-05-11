@@ -18,7 +18,6 @@ class Bilateral_fusion_MLIC:
         self.converted_image_set = []
         self.decomposed_image_set = []
         self.difference_set = []
-        self.i_detail_set = []
         self.i_detail_d_set = []
         self.i_detail_c_set = []
         self.i_detail_u_set = []
@@ -89,10 +88,10 @@ class Bilateral_fusion_MLIC:
             
                 self.decomposed_image_set.append(self.apply_decomposition_step(image))
     
-    def construct_I_detail_set(self):
+    def construct_i_detail(self):
         self.difference_set = [i_moved - i for i_moved, i in zip(self.decomposed_image_set[1:], self.decomposed_image_set)]
 
-        # TODO: cana we do this in parallel without so many for loops?
+        # TODO: can we do this in parallel without so many for loops?
         # construct i_detail_d_set <give me my own method pls ;(>
         for image in self.difference_set:
             d_1 = np.sign(image)
@@ -128,11 +127,13 @@ class Bilateral_fusion_MLIC:
 
             self.i_detail_u_set.append(u_array)
 
-        # construct i_detail_set <gie me my own method pls ;(>
-        for u_array, d_array in zip(self.i_detail_u_set, self.i_detail_d_set):
-            i_detail = (u_array * d_array) / u_array
 
-            self.i_detail_set.append(i_detail)
+        stacked_detail_u_set = np.stack(self.i_detail_u_set, axis=0)
+        stacked_detail_d_set = np.stack(self.i_detail_d_set, axis=0)
+
+        i_detail = np.sum(stacked_detail_u_set * stacked_detail_d_set, axis=0) / np.sum(stacked_detail_u_set, axis=0)
+
+        return i_detail
 
     def construct_i_base_robust_maximum(self):
         stacked_set = np.stack(self.decomposed_image_set, axis=0)
@@ -161,9 +162,15 @@ class Bilateral_fusion_MLIC:
         return robust_maximum
 
     def fuse(self):
+        # converted set is filled implicitly
         self.convert_color_space('RGB2YUV')
+        # log_y set is filled implicitly
         self.log_y_channel_set = self.log_y_channels()
-        # construct decomposed image set
+        # decomposed set is filled implicitly
         [self.apply_decomposition(image) for image in self.log_y_channel_set]
+        i_detail = self.construct_i_detail()
+        i_base = self.construct_i_base_robust_maximum()
+        i_result = i_detail + self.beta * i_base
+        # TODO: need to reverse log i_result
 
-        return self.decomposed_image_set
+        return i_result
