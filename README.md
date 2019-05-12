@@ -15,9 +15,9 @@ Each author is from different university.
 
 ## Dependencies
 
-Paper is implemented in Python 3.X with use of:
+Paper is implemented in Python 3.7.1 with use of:
 *  NumPy
-*  OpenCV 3.X:
+*  OpenCV 3.4.2:
     * cv2.cvtColor - RGB <-> YUV
     * cv2.Sobel - to get gradient magnitude
     * cv2.convertScaleAbs - to get gradient magnitude
