@@ -80,9 +80,9 @@ class Bilateral_fusion_MLIC:
         """This must be done for every image in input image set."""
         self.decomposed_image_set.append(image)
         
-        if self.scale_depth > 1:
-            for scale_step in range(1, self.scale_depth):
-                # TODO: Only first try, should be further evaluated
+        if self.scale_depth > 0:
+            for scale_step in range(1, self.scale_depth + 1):
+                # TODO: Only eval gaussian values, should be further specified
                 self.spatial_gaussian = 2 ** (scale_step - 1)
                 self.range_gaussian = 0.1 / (2 ** (scale_step - 1))
             
@@ -161,7 +161,7 @@ class Bilateral_fusion_MLIC:
 
     def fuse(self):
         # TODO: Add consistency check
-        if self.scale_depth == 1:
+        if self.scale_depth == 0:
             return self.image_set[0]   
         # converted set is filled implicitly
         self.convert_color_space('BGR2YUV')

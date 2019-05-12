@@ -22,9 +22,10 @@ def test_fuse_method_works_with_multiple_ok_inputs():
     MLIC_fusion.fuse()
 
 @pytest.mark.parametrize('scale_depth, expected', [
-    (1, 0),
-    (2, 2),
-    (3, 3)
+    (0, 0),
+    (1, 2),
+    (2, 3),
+    (3, 4)
 ])
 def test_decomposed_image_set_contains_correct_number_of_image(scale_depth, expected):
     test_image = load_test_image()
