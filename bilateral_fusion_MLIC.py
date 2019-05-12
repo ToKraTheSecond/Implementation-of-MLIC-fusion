@@ -25,7 +25,7 @@ class Bilateral_fusion_MLIC:
         self.spatial_gaussian = 0
 
     def convert_color_space(self, target_space):
-        if target_space == 'RGB2YUV':
+        if target_space == 'BGR2YUV':
             self.converted_image_set = [cv2.cvtColor(image, cv2.COLOR_RGB2YUV) for image in self.image_set]
         elif target_space == 'YUV2RGB':
             self.converted_image_set = [cv2.cvtColor(image, cv2.COLOR_YUV2RGB) for image in self.image_set]
@@ -164,7 +164,7 @@ class Bilateral_fusion_MLIC:
         if self.scale_depth == 1:
             return self.image_set[0]   
         # converted set is filled implicitly
-        self.convert_color_space('RGB2YUV')
+        self.convert_color_space('BGR2YUV')
         # log_y set is filled implicitly
         self.log_y_channel_set = self.log_y_channels()
         # decomposed set is filled implicitly

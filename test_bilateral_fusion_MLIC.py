@@ -51,6 +51,7 @@ def test_first_image_in_decomposed_image_set_is_unchanged():
 
 
 def load_test_image():
+    # loads in BGR order!
     test_image = cv2.imread('test_images/lena_roi.png', 1)
 
     return test_image.astype(np.float32)
