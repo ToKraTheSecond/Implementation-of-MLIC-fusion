@@ -44,32 +44,32 @@ class Bilateral_fusion_MLIC:
 
         pass
 
-    def apply_decomposition_step(self, image):
+    def apply_decomposition_step(self, image, kernel_size, spatial_gaussian, range_gaussian):
         rows_count, columns_count = image.shape
         output_image = np.zeros((rows_count, columns_count))
 
         # spatial_response won't change during iterations so we can precalculate it
-        xx, yy = np.meshgrid(range(-self.kernel_size, self.kernel_size + 1), 
-                             range(-self.kernel_size, self.kernel_size + 1))
+        xx, yy = np.meshgrid(range(-kernel_size, kernel_size + 1), 
+                             range(-kernel_size, kernel_size + 1))
 
-        spatial_response = np.exp( - (xx ** 2 + yy ** 2) / (self.spatial_gaussian ** 2))
+        spatial_response = np.exp( - (xx ** 2 + yy ** 2) / (spatial_gaussian ** 2))
 
         for row in range(rows_count):
             for column in range(columns_count):
                 # stay inside input image indexing space
-                row_min = max(row - self.kernel_size, 0)
-                row_max = min(row + self.kernel_size, rows_count - 1)
-                column_min = max(column - self.kernel_size, 0)
-                column_max = min(column + self.kernel_size, columns_count - 1)
+                row_min = max(row - kernel_size, 0)
+                row_max = min(row + kernel_size, rows_count - 1)
+                column_min = max(column - kernel_size, 0)
+                column_max = min(column + kernel_size, columns_count - 1)
                 roi = image[row_min:row_max + 1, column_min:column_max + 1]
 
                 # spatial_response offsets -> only correct spatial_response region will be indexed when indexed pixel is near image border
-                r_o = -1 * row + self.kernel_size
-                c_o = -1 * column + self.kernel_size
+                r_o = -1 * row + kernel_size
+                c_o = -1 * column + kernel_size
                 spatial_response_off = spatial_response[row_min + r_o:row_max + r_o + 1,
                                                        column_min + c_o:column_max + c_o + 1]
 
-                range_response = np.exp(-1 * ((roi - image[row, column]) ** 2 / (self.range_gaussian ** 2)))                
+                range_response = np.exp(-1 * ((roi - image[row, column]) ** 2 / (range_gaussian ** 2)))                
                 responses_product = spatial_response_off * range_response
 
                 output_image[row, column] = (1 / np.sum(responses_product)) * np.sum((responses_product * roi))
@@ -86,7 +86,7 @@ class Bilateral_fusion_MLIC:
                 self.spatial_gaussian = 2 ** (scale_step - 1)
                 self.range_gaussian = 0.1 / (2 ** (scale_step - 1))
             
-                self.decomposed_image_set.append(self.apply_decomposition_step(image))
+                self.decomposed_image_set.append(self.apply_decomposition_step(image, self.kernel_size, self.spatial_gaussian, self.range_gaussian))
     
     def construct_i_detail(self):
         self.difference_set = [i_moved - i for i_moved, i in zip(self.decomposed_image_set[1:], self.decomposed_image_set)]
