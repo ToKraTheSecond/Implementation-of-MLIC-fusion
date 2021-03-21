@@ -10,7 +10,7 @@ __pycache__/
 .vscode/
 
 # Unwanted folders
-dataset/
+dataset/debug
 
 # Unwanted files
 *.png
