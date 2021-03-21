@@ -7,17 +7,21 @@ Synthesis algorithm is designed to enhance shape and surface detail by combining
 Each is taken from same camera spot, but with different lightning directions.
 
 ## Paper link
-* [The Hebrew University of Jerusalem](http://www.cs.huji.ac.il/~raananf/projects/mlic/mlic.html) contains link to image test data
+* [The Hebrew University of Jerusalem](http://www.cs.huji.ac.il/~raananf/projects/mlic/mlic.html)
+    * contains dataset links
 * [princeton.edu](https://gfx.cs.princeton.edu/pubs/Fattal_2007_MSA/mlic.pdf)
 * [berkeley.edu](http://kneecap.cs.berkeley.edu/papers/mlic/mlic-SIG07.pdf)
 
 Each author is from different university.
 
+## Conda env creation
+
+`conda create -n mlic-fusion jupyterlab scipy opencv numpy pytest matplotlib`
+
 ## Dependencies
 
-Paper is implemented in Python 3.7.1 with use of:
 *  NumPy
-*  OpenCV 3.4.2:
+*  OpenCV:
     * cv2.cvtColor - RGB <-> YUV
     * cv2.Sobel - to get gradient magnitude
     * cv2.convertScaleAbs - to get gradient magnitude
